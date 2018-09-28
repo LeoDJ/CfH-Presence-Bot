@@ -50,14 +50,12 @@ function broadcastMsg(broadcastMessage) {
 
 function generateLeftMsg(person) {
     let username = person.username;
-    let firstName = person.name.split(' ')[0];
-    return `❌ ${firstName} (${username}) ist gegangen.`;
+    return `❌ ${username} ist gegangen.`;
 }
 
 function generateJoinedMsg(person) {
     let username = person.username;
-    let firstName = person.name.split(' ')[0];
-    return `✅ ${firstName} (${username}) ist gekommen.`;
+    return `✅ ${username} ist gekommen.`;
 }
 
 function generateCurrentlyPresentMsg() {
@@ -65,8 +63,7 @@ function generateCurrentlyPresentMsg() {
     let msg = "Aktuell anwesend:";
     persons.forEach(person => {
         let username = person.username;
-        let firstName = person.name.split(' ')[0];
-        msg += `\n - ${firstName} (${username})`;
+        msg += `\n - ${username}`;
     });
     return msg;
 }
