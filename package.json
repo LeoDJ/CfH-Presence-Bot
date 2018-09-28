@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "request": "^2.88.0",
+    "telegraf": "^3.24.0"
+  }
+}
