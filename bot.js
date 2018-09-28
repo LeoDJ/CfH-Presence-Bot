@@ -66,7 +66,7 @@ function generateCurrentlyPresentMsg() {
     persons.forEach(person => {
         let username = person.username;
         let firstName = person.name.split(' ')[0];
-        msg += `\n - ${firstName} (username)`;
+        msg += `\n - ${firstName} (${username})`;
     });
     return msg;
 }
