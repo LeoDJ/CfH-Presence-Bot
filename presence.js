@@ -38,7 +38,7 @@ function setCallback(cbk) {
     callback = cbk;
 }
 
-poll();
+setInterval(poll, 60 * 1000);
 
 module.exports = {
     setDataService,
