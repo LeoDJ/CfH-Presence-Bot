@@ -50,7 +50,7 @@ function broadcastMsg(broadcastMessage) {
 
 function generateLeftMsg(person) {
     let username = person.username;
-    return `❌ ${username} ist gegangen.`;
+    return `❌ ${username} ist vor Kurzem gegangen.`;
 }
 
 function generateJoinedMsg(person) {
@@ -60,12 +60,18 @@ function generateJoinedMsg(person) {
 
 function generateCurrentlyPresentMsg() {
     persons = dataService.getPresence();
-    let msg = "Aktuell anwesend:";
-    persons.forEach(person => {
-        let username = person.username;
-        msg += `\n - ${username}`;
-    });
-    return msg;
+
+    if(persons.length == 0) {
+        return "Niemand da ¯\\_(ツ)_/¯";
+    }
+    else {
+        let msg = "Aktuell anwesend:";
+        persons.forEach(person => {
+            let username = person.username;
+            msg += `\n - ${username}`;
+        });
+        return msg;
+    }
 }
 
 function presenceUpdate(data) {
