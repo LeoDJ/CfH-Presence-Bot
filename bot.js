@@ -55,7 +55,7 @@ function generateLeftMsg(person) {
 
 function generateJoinedMsg(person) {
     let username = person.username;
-    return `✅ ${username} ist gekommen.`;
+    return `✅ ${username} ist angekommen.`;
 }
 
 function generateCurrentlyPresentMsg() {
