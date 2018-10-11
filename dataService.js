@@ -54,6 +54,15 @@ function getPresence() {
     return data.presence;
 }
 
+function setToken(token) {
+    data.token = token;
+    saveFile();
+}
+
+function getToken() {
+    return data.token;
+}
+
 module.exports = {
     loadFile,
     saveFile,
@@ -61,5 +70,7 @@ module.exports = {
     removeChat,
     getChatList,
     setPresence,
-    getPresence
+    getPresence,
+    getToken,
+    setToken
 };
