@@ -23,7 +23,7 @@ bot.telegram.getMe().then((botInfo) => {
 });
 
 function userString(ctx) {
-    return JSON.stringify(ctx.from.id == ctx.chat.id ? ctx.from : {
+    return JSON.stringify(ctx.from.id === ctx.chat.id ? ctx.from : {
         from: ctx.from,
         chat: ctx.chat
     });
@@ -50,18 +50,18 @@ function broadcastMsg(broadcastMessage) {
 
 function generateLeftMsg(person) {
     let username = person.username;
-    return `❌ ${username} ist vor Kurzem gegangen.`;
+    return `[${person.location}] ❌ ${username} ist vor Kurzem gegangen.`;
 }
 
 function generateJoinedMsg(person) {
     let username = person.username;
-    return `✅ ${username} ist angekommen.`;
+    return `[${person.location}] ✅ ${username} ist angekommen.`;
 }
 
 function generateCurrentlyPresentMsg() {
-    persons = dataService.getPresence();
+    let persons = dataService.getPresence();
 
-    if(persons.length == 0) {
+    if(persons.length === 0) {
         return "Niemand da ¯\\_(ツ)_/¯";
     }
     else {
@@ -118,4 +118,4 @@ bot.startPolling();
 module.exports = {
     setDataService,
     setPresenceService
-}
+};

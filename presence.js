@@ -26,8 +26,8 @@ function loadToken() {
 function comparer(otherArray) {
     return function (current) {
         return otherArray.filter(function (other) {
-            return other.username == current.username
-        }).length == 0;
+            return other.username === current.username && other.location === current.location;
+        }).length === 0;
     }
 }
 
@@ -75,4 +75,4 @@ setInterval(poll, 60 * 1000);
 module.exports = {
     setDataService,
     setCallback
-}
+};
