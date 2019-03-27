@@ -79,7 +79,7 @@ function generateCurrentlyPresentMsg() {
     let persons = dataService.getPresence();
 
     if(persons.length === 0) {
-        return "Niemand da ¯\\_(ツ)_/¯";
+        return "Niemand da ¯\\\\_(ツ)\\_/¯"; // escaping needed for markdown parser
     }
     else {
         // sort persons alphabetically
