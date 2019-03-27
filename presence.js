@@ -70,6 +70,7 @@ function setCallback(cbk) {
     callback = cbk;
 }
 
+setTimeout(poll, 100); // also poll on first run
 setInterval(poll, 60 * 1000);
 
 module.exports = {

@@ -4,5 +4,11 @@ module.exports = {
   user: {
     username: 'USERNAME HERE',
     password: 'PASSWORD HERE'
-  }
+  },
+  emojiReplacement: {
+    'Buga': '🌸',
+    'Cowo': '🏢',
+    'MSE': '🚀'
+  },
+  adminChatIds: [12345678], // allowed to do broadcasts
 }

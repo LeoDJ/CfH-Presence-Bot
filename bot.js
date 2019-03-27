@@ -1,4 +1,6 @@
 const Telegraf = require('telegraf');
+const extra = require('telegraf/extra')
+const markdown = extra.markdown()
 const config = require('./config');
 
 const bot = new Telegraf(config.botToken);
@@ -42,20 +44,35 @@ function logOutMsg(ctx, text) {
 
 function broadcastMsg(broadcastMessage) {
     let subscribedChats = dataService.getChatList();
+    console.log("> <broadcast>", broadcastMessage);
     subscribedChats.forEach(userId => {
-        console.log(">", {id: userId}, broadcastMessage);
-        bot.telegram.sendMessage(userId, broadcastMessage);
+        bot.telegram.sendMessage(userId, broadcastMessage, markdown);
     })
 }
 
+let maxLocationLength = -1;
+
+function generateLocationString(location) {
+    if(maxLocationLength === -1) {
+        // call "currently present request" to calculate maximum location name length, should not generate loop(tm)
+        generateCurrentlyPresentMsg();
+    }
+
+    // generate stylized location with padding
+    let locationStr = config.emojiReplacement[location] || '❓';
+    locationStr += `\` ${location} ${' '.repeat(maxLocationLength - location.length)}\`|   `;
+    return locationStr;
+}
+
+
 function generateLeftMsg(person) {
     let username = person.username;
-    return `[${person.location}] ❌ ${username} ist vor Kurzem gegangen.`;
+    return `${generateLocationString(person.location)}❌ ${username} ist vor Kurzem gegangen.`;
 }
 
 function generateJoinedMsg(person) {
     let username = person.username;
-    return `[${person.location}] ✅ ${username} ist angekommen.`;
+    return `${generateLocationString(person.location)}✅ ${username} ist angekommen.`;
 }
 
 function generateCurrentlyPresentMsg() {
@@ -65,11 +82,37 @@ function generateCurrentlyPresentMsg() {
         return "Niemand da ¯\\_(ツ)_/¯";
     }
     else {
-        let msg = "Aktuell anwesend:";
+        // sort persons alphabetically
+        persons.sort((a, b) => a.username.toLowerCase() > b.username.toLowerCase());
+
+        // split persons into their locations
+        personsByLocation = {};
         persons.forEach(person => {
             let username = person.username;
-            msg += `\n - ${username}`;
+            let location = person.location;
+            if(personsByLocation[location] === undefined) {
+                personsByLocation[location] = [];
+            }
+            personsByLocation[location].push(username);
+        })
+
+        let locations = Object.keys(personsByLocation);
+        // calculate maximum length of location names for alignment
+        maxLocationLength = locations.reduce((prev, loc) => loc.length > prev ? loc.length : prev, 0);
+        
+        // generate message
+        let msg = "*[ Aktuell anwesend ]*";
+        locations.forEach((location, i) => {
+            let locationStr = generateLocationString(location);
+            personsByLocation[location].forEach(person => {
+                msg += `\n${locationStr + person}`;
+            });
+            // draw line if needed
+            if(i < locations.length - 1) {
+                msg += '\n——————————————';
+            }
         });
+
         return msg;
     }
 }
@@ -102,7 +145,7 @@ bot.command('status', ctx => {
     logMsg(ctx);
     let msg = generateCurrentlyPresentMsg();
     logOutMsg(ctx, msg);
-    ctx.reply(msg);
+    ctx.reply(msg, markdown);
 });
 
 bot.command('stop', ctx => {
@@ -111,6 +154,17 @@ bot.command('stop', ctx => {
     var m = "OK, du bekommst jetzt keinen Spam mehr.";
     logOutMsg(ctx, m);
     ctx.reply(m);
+});
+
+bot.command('broadcast', ctx => {
+    logMsg(ctx);
+    if(config.adminChatIds.indexOf(ctx.from.id) > -1) {
+        let text = ctx.message.text.split(' ').slice(1).join(' '); //remove command
+        broadcastMsg(text);
+    }
+    else {
+        console.log("Denied broadcast to unauthenticated user");
+    }
 });
 
 bot.startPolling();
