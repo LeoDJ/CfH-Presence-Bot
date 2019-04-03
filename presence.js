@@ -50,8 +50,13 @@ function login(username, password) {
 
 function poll() {
     loadToken().then(token => {
-	    request(apiUrl, {auth: {bearer: token}}, (err, res, body) => {
+	    request(apiUrl, {auth: {bearer: token}, followRedirect: false}, (err, res, body) => {
 		    if (!err) {
+		    	if(res.statusCode === 303) {
+		    		console.log('Token invalid, got redirect from service. Removing Token and retrying next time.');
+		    		dataService.setToken(undefined);
+		    		return;
+			    }
 			    let curPresence = JSON.parse(body);
 			    let lastPresence = dataService.getPresence();
 			    let joined = curPresence.filter(comparer(lastPresence));
