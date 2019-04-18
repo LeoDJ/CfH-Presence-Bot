@@ -58,14 +58,20 @@ function poll() {
 		    		return;
 			    }
 			    let curPresence = JSON.parse(body);
-			    let lastPresence = dataService.getPresence();
-			    let joined = curPresence.filter(comparer(lastPresence));
-			    let left = lastPresence.filter(comparer(curPresence));
-			    dataService.setPresence(curPresence);
-
-			    if (callback) {
-				    callback({joined: joined, left: left, current: curPresence});
-			    }
+                if(Array.isArray(curPresence)) {
+                    let lastPresence = dataService.getPresence();
+                    let joined = curPresence.filter(comparer(lastPresence));
+                    let left = lastPresence.filter(comparer(curPresence));
+                    dataService.setPresence(curPresence);
+    
+                    if (callback) {
+                        callback({joined: joined, left: left, current: curPresence});
+                    }
+                }
+                else {
+                    console.error("Presence API response was not an array");
+                    console.error(curPresence);
+                }
 		    }
 	    });
     })
