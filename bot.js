@@ -51,6 +51,7 @@ function broadcastMsg(broadcastMessage) {
 }
 
 let maxLocationLength = -1;
+maxLocationLength = Object.keys(config.emojiReplacement).reduce((prev, item) => item.length > prev ? item.length : prev, -1);
 
 function generateLocationString(location) {
     if(maxLocationLength === -1) {
