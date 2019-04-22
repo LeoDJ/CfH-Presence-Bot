@@ -61,7 +61,13 @@ function generateLocationString(location) {
 
     // generate stylized location with padding
     let locationStr = config.emojiReplacement[location] || '❓';
-    locationStr += `\` ${location} ${' '.repeat(maxLocationLength - location.length)}\`|   `;
+    let paddingCount = maxLocationLength - location.length;
+    if(paddingCount < 0) {
+        paddingCount = 0;
+        console.error("unexpected location length", location, location.length);
+    }
+    locationStr += `\` ${location} ${' '.repeat(paddingCount)}\`|   `;
+    
     return locationStr;
 }
 
